@@ -1,11 +1,31 @@
 ---
-title: "biostat777-intro-ruiqing-cai"
+title: "Ruiqing Cai"
+image: images/Ruiqing_Cai_circle.jpg
+about:
+  template: jolla
+  links:
+    - text: LinkedIn
+      icon: linkedin
+      href: https://www.linkedin.com/in/ruiqing-cai
+      
+    - text: Github
+      icon: github
+      href: https://github.com/cairuiqing
+      
+    - text: Email
+      icon: envelope
+      href: mailto:rcai9@jh.edu
+
 ---
 
-This is a Quarto website.
+<div class="intro">
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+**I am a second-year Master of Health Science (MHS) in Infectious Disease Epidemiology at Johns Hopkins Bloomberg School of Public Health (JHSPH). I am currently working on Malaria transmission dynamic and modeling simulations to predict future transmission by different locations and seasonality**
 
-```{r}
-1 + 1
-```
+</div>
+
+<style>
+    .title { font-family: "Garamond", serif; font-weight: bold; font-size: 50px }
+    .intro { font-family: "Garamond", serif; color: "black"; font-size: 25px }
+    body { background-color: #99FFCC; }
+</style>
