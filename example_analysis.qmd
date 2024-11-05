@@ -1,3 +1,19 @@
 ---
-title: "Untitled"
+title: "Example Analysis"
+author:
+  - name: Ruiqing Cai
+date: 2024-11-05
+categories: [JHBSPH]
+description: An example analysis with 2022 Monkeypox outbreak dataset
 ---
+
+![The dataset was uploaded by Hanzla Nawaz on [Kaggle](https://www.kaggle.com/datasets/hanzlanawaz/monkeypox-outbreak/code) in 2022. Image created by Hanzla Nawaz](images/dataset-cover.jpg)
+
+
+```{r Loading chunck, include=FALSE}
+if (!require(tidyverse)) {install.packages("tidyverse"); library(tidyverse)}
+if (!require(knitr)) {install.packages("knitr"); library(knitr)}
+```
+
+
+
