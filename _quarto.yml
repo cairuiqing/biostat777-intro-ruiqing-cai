@@ -2,12 +2,13 @@ project:
   type: website
 
 website:
-  title: "biostat777-intro-ruiqing-cai"
+  title: "Personal Introduction"
   navbar:
-    left:
+    right:
       - href: index.qmd
         text: Home
       - about.qmd
+      - example_analysis.qmd
 
 format:
   html:
