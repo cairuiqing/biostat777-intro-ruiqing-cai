@@ -1,6 +1,6 @@
 ---
 title: "More About me"
-title-block-banner: "#99FFCC"
+title-block-banner: "#d3ead9"
 ---
 
 ::::: grid
@@ -17,7 +17,7 @@ As my career focus has shifted towards infectious disease research, I am eager t
 
 ------------------------------------------------------------------------
 
-### [Education]{style="color: #339966"}
+### [Education]{style="color: #789a69"}
 
 **Johns Hopkins Bloomberg School of Public Health** \| MHS in [Epidemiology](https://publichealth.jhu.edu/academics/mhs-dept-of-epidemiology); Concentrate on Infectious Disease \| Current
 
@@ -25,7 +25,7 @@ As my career focus has shifted towards infectious disease research, I am eager t
 
 ------------------------------------------------------------------------
 
-### [Research Experience]{style="color: #339966"}
+### [Research Experience]{style="color: #789a69"}
 
 **Center for Evidence-Based and Translational Medicine, Wuhan University** \| Research Assistant \| Dr. Xiantao Zeng's Lab \| *Survival Analysis on Oncology* \| June 2024 - Present
 
@@ -41,7 +41,7 @@ As my career focus has shifted towards infectious disease research, I am eager t
 
 ------------------------------------------------------------------------
 
-### [Activities]{style="color: #339966"}
+### [Activities]{style="color: #789a69"}
 
 **Johns Hopkins Bloomberg School of Public Health** \| Teaching Assistant \| *Epidemiologic Method 2* \| October 2024 - Present
 
@@ -53,7 +53,7 @@ As my career focus has shifted towards infectious disease research, I am eager t
 
 ------------------------------------------------------------------------
 
-### [More and More - "purr-ent"]{style="color: #339966"}
+### [More and More - "purr-ent"]{style="color: #789a69"}
 
 ::: {layout-ncol="3"}
 ![Yo-Yo](images/cat.jpg)

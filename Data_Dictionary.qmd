@@ -1,0 +1,48 @@
+---
+title: "Data Dictionary"
+title-block-banner: "#d3ead9"
+---
+
+```{r preparation, include=FALSE}
+if (!require(knitr)) {install.packages("knitr"); library(knitr)}
+if (!require(tidyverse)) {install.packages("tidyverse"); library(tidyverse)}
+```
+
+```{r data dictionary}
+data_dict <- tribble(
+  ~"Column Name", ~"Description",
+  "ID", "Unique identifier for each case entry.",
+  "Status", "Confirmation status of the case (e.g., confirmed).",
+  "Location", "Specific healthcare or facility location where the case was identified.",
+  "City", "City where the case was identified.",
+  "Country", "Country where the case was identified.",
+  "Age", "Age of the individual in the case; may be missing for some entries.",
+  "Gender", "Gender of the individual (e.g., male, female); may be missing for some entries.",
+  "Date_onset", "Date when symptoms first appeared.",
+  "Date_confirmation", "Date when the case was confirmed through testing.",
+  "Symptoms", "Description of the symptoms presented by the individual.",
+  "Hospitalised (Y/N/NA)", "Indicates if the individual was hospitalized (Yes, No, or Not Available).",
+  "Date_hospitalisation", "Date the individual was hospitalized, if applicable.",
+  "Isolated (Y/N/NA)", "Indicates if the individual was isolated (Yes, No, or Not Available).",
+  "Date_isolation", "Date the individual was placed in isolation, if applicable.",
+  "Outcome", "Final outcome of the case (e.g., recovered, deceased); may be missing for ongoing cases.",
+  "Contact_comment", "Additional comments about the individual's contacts, if available.",
+  "Contact_ID", "Identifier for known contacts linked to the case, if available.",
+  "Contact_location", "Location of the contact(s), if recorded.",
+  "Travel_history (Y/N/NA)", "Indicates if the individual has a history of travel prior to case identification (Yes, No, or Not Available).",
+  "Travel_history_entry", "Date of entry from the individual's travel history, if applicable.",
+  "Travel_history_start", "Start date of travel history, if applicable.",
+  "Travel_history_location", "Specific locations visited in travel history, if applicable.",
+  "Travel_history_country", "Countries visited in travel history, if applicable.",
+  "Genomics_Metadata", "Genomic classification or clade associated with the case (e.g., West African Clade).",
+  "Confirmation_method", "Method used to confirm the case (e.g., RT-PCR).",
+  "Source", "Primary source link for data verification (e.g., government or WHO news release).",
+  "Source_II", "Additional source link for data verification.",
+  "Date_entry", "Date the case information was entered into the dataset.",
+  "Date_last_modified", "Date when the case information was last updated or modified.",
+  "Source_III", "Tertiary source link for additional verification, if available.",
+  "Country_ISO3", "ISO3 code for the country where the case was identified (e.g., GBR for Great Britain)."
+)
+
+kable(data_dict, format = "html", table.attr = "class='table table-striped'")
+```

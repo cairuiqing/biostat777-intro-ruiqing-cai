@@ -1,19 +1,203 @@
 ---
 title: "Example Analysis"
+title-block-banner: "#d3ead9"
 author:
   - name: Ruiqing Cai
 date: 2024-11-05
 categories: [JHBSPH]
-description: An example analysis with 2022 Monkeypox outbreak dataset
+description: |
+  An example analysis with 2022 Monkeypox outbreak dataset. \
+  **Intended Audience**: *Public health professionals, epidemiologists, and policymakers*
 ---
 
 ![The dataset was uploaded by Hanzla Nawaz on [Kaggle](https://www.kaggle.com/datasets/hanzlanawaz/monkeypox-outbreak/code) in 2022. Image created by Hanzla Nawaz](images/dataset-cover.jpg)
 
+### [Background]{style="color: #789a69"}
+
+
+
+::::: grid
+::: g-col-8
+Monkeypox, a viral disease caused by an orthopoxvirus, triggered a global outbreak in May 2022, originating in the Democratic Republic of the Congo. A newly identified strain, Clade Ib, was primarily responsible for this outbreak, spreading to regions and countries previously unaffected by the disease (https://www.who.int/emergencies/situations/mpox-outbreak). Understanding this transmission pattern and identifying potential risk factors is critical to assessing future transmission risks. This leads to my research question for this analysis:
+:::
+
+::: g-col-4
+![](images/WHO_logo.jpg){width="80%"}
+:::
+:::::
+
+### [Research Question]{style="color: #789a69"}
+
+*Are there patterns in the demographic and travel history data that could inform public health responses to Monkeypox outbreaks?*
+
+### [Data Description]{style="color: #789a69"}
+
+The data contains detailed information about the Monkeypox cases during the 2022 outbreak, including demographic data, clinical information, etc. For more information, see the [data dictionary](Data_Dictionary.qmd).
 
 ```{r Loading chunck, include=FALSE}
 if (!require(tidyverse)) {install.packages("tidyverse"); library(tidyverse)}
 if (!require(knitr)) {install.packages("knitr"); library(knitr)}
+dataset <- read.csv("data/Monkeypox.csv")
 ```
 
+### [Cleaning Process]{style="color: #789a69"}
+In this section, I have conducted some data cleaning and also showed **5** different functions from `dplyr` or `tidyr` package.
+1. `dplyr::mutate`; 2. `dplyr::case_when`; 3. `dplyr::filter`; 4. `dplyr::count`; 5. `tidyr::separate_rows`
+
+```{r data cleaning, warning=FALSE}
+# 1. Clean and standardize the Age column
+dataset_clean <- dataset |> 
+  dplyr::mutate(Age = as.character(Age)) |> 
+  dplyr::mutate(Age = ifelse(Age %in% c("CAN", "NA"), NA, Age)) |> 
+  dplyr::mutate(Age = dplyr::case_when(
+    Age == "14" ~ 14,
+    Age == "15-19" ~ 17,
+    Age == "20-24" ~ 22,
+    Age == "20-44" ~ 32,
+    Age == "20-64" ~ 42,
+    Age == "25-29" ~ 27,
+    Age == "25-44" ~ 35,
+    Age == "<40" ~ 25,
+    Age == "30-34" ~ 32,
+    Age == "30-39" ~ 34,
+    Age == "30-59" ~ 44,
+    Age == "35-39" ~ 37,
+    Age == "40-44" ~ 42,
+    Age == "40-45" ~ 43,
+    Age == "40-49" ~ 45,
+    Age == "45-49" ~ 47,
+    Age == "50-54" ~ 52,
+    Age == "50-59" ~ 55,
+    Age == "55-59" ~ 57,
+    Age == "60-64" ~ 62,
+    Age == "65-69" ~ 67,
+    Age == "70-74" ~ 72,
+    TRUE ~ as.numeric(Age)  # Convert any remaining single-age values to numeric
+  ))
+
+dataset_clean <- dataset_clean |> 
+  dplyr::mutate(Age_Group = dplyr::case_when(
+    Age < 20 ~ "Under 20",
+    Age >= 20 & Age < 30 ~ "20-29",
+    Age >= 30 & Age < 40 ~ "30-39",
+    Age >= 40 & Age < 50 ~ "40-49",
+    Age >= 50 & Age < 60 ~ "50-59",
+    Age >= 60 & Age < 70 ~ "60-69",
+    Age >= 70 ~ "70+",
+    TRUE ~ "NA"
+  ))
+
+# 2. Filter to focus on confirmed cases with travel history data
+dataset_filtered <- dataset_clean |> 
+  dplyr::filter(Status == "confirmed" & !is.na(Travel_history_country) & 
+                  Travel_history_country != "Unknown" & Travel_history_country != "")
+
+# 3. Count the number of cases per country of identification and per travel history location
+location_counts <- dataset_filtered |> 
+  dplyr::count(Country, Travel_history_country, name = "case_count")
+
+# 4. Separate travel history Countries into individual rows if there are multiple locations in one entry
+monkeypox_separated <- dataset_filtered |> 
+  tidyr::separate_rows(Travel_history_country, sep = ";")
+```
+
+### [Analysis Process]{style="color: #789a69"}
+In this section, a few analysis have been produced with visualizations
+
+```{r analysis process, warning=FALSE, error=FALSE}
+# 1. Drawing Epidemic Curve
+dataset_clean <- dataset_clean |> 
+  dplyr::filter(!is.na(Date_confirmation)) |> 
+  dplyr::mutate(Date_confirmation = as.Date(Date_confirmation, format = "%Y/%m/%d"))
+  
+
+epidemic_data <- dataset_clean |> 
+  dplyr::count(Date_confirmation, name = "case_count")
+
+invisible(Sys.setlocale("LC_TIME", "C")) # Set date in English
+
+ggplot(epidemic_data, aes(x = Date_confirmation, y = case_count)) +
+  geom_line() +
+  labs(
+    title = "Epidemic Curve of Monkeypox Cases",
+    subtitle = "Number of confirmed cases by date of confirmation",
+    x = "Date of Confirmation",
+    y = "Number of Cases",
+    caption = "Data source: Monkeypox dataset"
+  ) +
+  theme_classic()
+
+# 2. Relationship between hospitalization and age groups
+## i. Calculate total case counts by Age Group
+age_group_totals <- dataset_clean |> 
+  dplyr::count(Age_Group, name = "total_cases")
+
+## ii. Calculate hospitalization counts by Age Group
+hospitalization_data <- dataset_clean |> 
+  dplyr::filter(Age_Group != "NA" & `Hospitalised..Y.N.NA.` %in% c("Y", "N")) |> 
+  dplyr::count(Age_Group, `Hospitalised..Y.N.NA.`, name = "case_count") |> 
+  dplyr::mutate(`Hospitalised..Y.N.NA.` = dplyr::case_when(
+    `Hospitalised..Y.N.NA.` == "Y" ~ "Hospitalized",
+    `Hospitalised..Y.N.NA.` == "N" ~ "Not Hospitalized",
+    TRUE ~ "Unknown"
+  ))
+
+## iii. Merge total cases and hospitalized cases, then calculate hospitalization rate
+hospitalization_rates <- hospitalization_data |> 
+  dplyr::group_by(Age_Group) |> 
+  dplyr::mutate(total_cases = sum(case_count),
+                attack_rate = (case_count / total_cases) * 100) |> 
+  dplyr::ungroup()
+
+## iiii. Plot hospitalization and non-hospitalization rates by age group
+ggplot(hospitalization_rates, aes(x = Age_Group, y = attack_rate, fill = `Hospitalised..Y.N.NA.`)) +
+  geom_col(position = position_dodge(width = 0.5), width = 0.5) +
+  facet_wrap(~ `Hospitalised..Y.N.NA.`) +
+  labs(
+    title = "Hospitalization vs. Non-Hospitalization Attack Rates by Age Group",
+    subtitle = "Comparison of hospitalization risks across age groups",
+    x = "Age Group",
+    y = "Attack Rate (%)",
+    fill = "Hospitalization Status",
+    caption = "Data source: Monkeypox dataset"
+  ) +
+  theme_classic()
+
+## v. Attack Rates and Chi-Square Test on Hospitalization
+contingency_table <- hospitalization_data |> 
+  tidyr::pivot_wider(names_from = `Hospitalised..Y.N.NA.`, values_from = case_count, values_fill = 0) |> 
+  dplyr::select(Age_Group, Hospitalized, `Not Hospitalized`) |> 
+  column_to_rownames(var = "Age_Group") |> 
+  as.matrix()
+
+## vi. Perform chi-square test on hospitalization vs age group
+chi_square_test <- chisq.test(contingency_table)
+print(chi_square_test)
+
+# 3. Heatmap of Confirmed Cases by Travel History Country and Date of Confirmation
+# Filter out unknown travel history countries
+heatmap_data <- monkeypox_separated |> 
+  dplyr::filter(!is.na(Travel_history_country) & Travel_history_country != "Unknown") |> 
+  dplyr::count(Date_confirmation, Travel_history_country, name = "case_count")
+
+# Convert Date_confirmation to date format
+heatmap_data <- heatmap_data |> 
+  dplyr::mutate(Date_confirmation = as.Date(Date_confirmation, format = "%Y/%m/%d"))
+
+# Plot the heatmap
+ggplot(heatmap_data, aes(x = Date_confirmation, y = Travel_history_country, fill = case_count)) +
+  geom_tile(color = "white") +  # Adds a white border around each tile for clarity
+  scale_fill_gradient(low = "lightblue", high = "darkblue") +  # Color gradient for case count
+  labs(
+    title = "Heatmap of Confirmed Monkeypox Cases by Travel History",
+    subtitle = "Frequency of confirmed cases by travel history country and date of confirmation",
+    x = "Date of Confirmation",
+    y = "Travel History Country",
+    fill = "Number of Cases",
+    caption = "Data source: Monkeypox dataset"
+  ) +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
 

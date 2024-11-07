@@ -27,5 +27,5 @@ about:
 <style>
     .title { font-family: "Garamond", serif; font-weight: bold; font-size: 50px }
     .intro { font-family: "Garamond", serif; color: "black"; font-size: 25px }
-    body { background-color: #99FFCC; }
+    body { background-color: #d9ead3; }
 </style>
