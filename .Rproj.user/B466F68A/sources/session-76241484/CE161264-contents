@@ -1,0 +1,64 @@
+---
+title: "More About me"
+title-block-banner: "#d3ead9"
+---
+
+::::: grid
+::: g-col-6
+I graduated from Virginia Polytechnic Institute and State University (Virginia Tech, VT) with dual degrees in Chemistry and Public Health. During my undergraduate studies in Blacksburg, Virginia, I explored various research areas, enriching my multidisciplinary background. In chemistry, I conducted two projects focused on battery cell development. In biology, I worked on rotavirus vaccine development, using gnotobiotic pig models to study human enteric virus infections and diseases.
+:::
+
+::: g-col-6
+![](images/VT.jpg)
+:::
+:::::
+
+As my career focus has shifted towards infectious disease research, I am eager to further immerse myself in public health and epidemiology. I have gained significant experience in modeling respiratory transmissible diseases, using COVID-19 as a case study. Leveraging mobility data from mobile phones, I developed simulations to study disease transmission dynamics in Virginia, examining how different outbreak origins and seasonal factors influence spread patterns. Looking ahead, my goal over the next 5-10 years is to delve deeper into research on infectious disease transmission, contributing to the advancement of public health interventions.
+
+------------------------------------------------------------------------
+
+### [Education]{style="color: #789a69"}
+
+**Johns Hopkins Bloomberg School of Public Health** \| MHS in [Epidemiology](https://publichealth.jhu.edu/academics/mhs-dept-of-epidemiology); Concentrate on Infectious Disease \| Current
+
+**Virginia Polytechnic Institute and State University** \| B.S. in [Public Health](https://publichealth.vt.edu/curriculum/bsph.html) \| B.A. in [Chemistry](https://chem.vt.edu/undergraduate.html) \| Graduated May 2023
+
+------------------------------------------------------------------------
+
+### [Research Experience]{style="color: #789a69"}
+
+**Center for Evidence-Based and Translational Medicine, Wuhan University** \| Research Assistant \| Dr. Xiantao Zeng's Lab \| *Survival Analysis on Oncology* \| June 2024 - Present
+
+**Johns Hopkins Bloomberg School of Public Health** \| Graduate Research Assistant \| Dr. Amy Wesolowski's Team & [Infectious Disease Dynamics JHBSPH](https://www.iddynamics.jhsph.edu) \| *Malaria Transmission Dynamic Modeling* \| November 2023 - Present
+
+**Virginia-Maryland College of Veterinary Medicine, Virginia Tech** \| Undergraduate Research Assistant \| Dr. Nick Ruktanonchai's Team \| *Infectious Diseases (Respirotory Diseases) Transmission Model in Virginia* \| August 2022 - August 2023
+
+**Virginia-Maryland College of Veterinary Medicine, Virginia Tech** \| Undergraduate Research Assistant \| [Dr. Lijuan Yuan's Lab](https://research.vetmed.vt.edu/labs/faculty-labs/yuan-lab.html) \| *Vaccine Development for Rotavirus by Using Gnotobiotic Pig Models* \| February 2022 - December 2022
+
+**Virginia Tech College of Science** \| Undergraduate Research Assistant \| [Dr. Feng Lin's Lab](https://thelinlabatvt.weebly.com/) \| *Lithium Battery Cell Development* \| December 2021 - December 2022
+
+**Hubei Topgene Biotechnology Co., Ltd** \| Research Intern \| [Topgenebio](https://en.topgenebio.com/) \| *Medicine toxicology and the pharmacokinetics of Antibiotics by Using Rhesus Macaque Models* \| November 2020 - March 2021
+
+------------------------------------------------------------------------
+
+### [Activities]{style="color: #789a69"}
+
+**Johns Hopkins Bloomberg School of Public Health** \| Teaching Assistant \| *Epidemiologic Method 2* \| October 2024 - Present
+
+**Johns Hopkins Bloomberg School of Public Health** \| Teaching Assistant \| *Epidemiologic Inference in Outbreak Investigations course* \| August 2024 - October 2024
+
+**Virginia Polytechnic Institute and State University** \| Peer Tutor \| *Student Success Center* \| August 2022 - May 2023
+
+**American Red Cross** \| Volunteer \| January 2022 - January 2023
+
+------------------------------------------------------------------------
+
+### [More and More - "purr-ent"]{style="color: #789a69"}
+
+::: {layout-ncol="3"}
+![Yo-Yo](images/cat.jpg)
+
+![Moxi](images/cat_2.jpg)
+
+![Morgan](images/cat_3.jpg)
+:::

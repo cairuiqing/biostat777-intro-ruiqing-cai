@@ -1,0 +1,13 @@
+/* css styles */
+
+.indented-paragraph {
+  margin-left: 0.3in; /* Indent by 0.3 inches */
+}
+
+.figure-caption {
+  font-style: italic;
+  font-size: 0.9em;
+  color: #555555;
+  text-align: left;
+  margin-top: 5px;
+}
