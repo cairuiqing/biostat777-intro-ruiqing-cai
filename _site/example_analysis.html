@@ -8,7 +8,7 @@
 
 <meta name="author" content="Ruiqing Cai">
 <meta name="dcterms.date" content="2024-11-05">
-<meta name="description" content="An example analysis with 2022 Monkeypox outbreak dataset. Intended Audience: Public health professionals, epidemiologists, and policymakers">
+<meta name="description" content="An example analysis with 2022 Monkeypox outbreak dataset. Intended Audience: Infectious Diseases related Public health professionals, epidemiologists, and policymakers. And Of course anyone interest in my website and reading my analysis, like you">
 
 <title>Example Analysis – Ruiqing Cai® Website</title>
 <style>
@@ -57,7 +57,26 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -110,6 +129,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       }
 </style>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -158,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
                   <div>
         <div class="description">
           <p>An example analysis with 2022 Monkeypox outbreak dataset.<br>
-          <strong>Intended Audience</strong>: <em>Public health professionals, epidemiologists, and policymakers</em></p>
+          <strong>Intended Audience</strong>: <em>Infectious Diseases related Public health professionals, epidemiologists, and policymakers. And Of course anyone interest in my website and reading my analysis, like you</em></p>
         </div>
       </div>
                           <div class="quarto-categories">
@@ -201,11 +249,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#data-description" id="toc-data-description" class="nav-link" data-scroll-target="#data-description"><span style="color: #789a69">Data Description</span></a></li>
   <li><a href="#cleaning-process" id="toc-cleaning-process" class="nav-link" data-scroll-target="#cleaning-process"><span style="color: #789a69">Cleaning Process</span></a></li>
   <li><a href="#analysis-process" id="toc-analysis-process" class="nav-link" data-scroll-target="#analysis-process"><span style="color: #789a69">Analysis Process</span></a></li>
+  <li><a href="#analysis-summary" id="toc-analysis-summary" class="nav-link" data-scroll-target="#analysis-summary"><span style="color: #789a69">Analysis Summary</span></a></li>
+  <li><a href="#function-used-in-this-analysis" id="toc-function-used-in-this-analysis" class="nav-link" data-scroll-target="#function-used-in-this-analysis"><span style="color: #789a69">Function Used in This Analysis</span></a></li>
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references"><span style="color: #789a69">References</span></a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
-<main class="content quarto-banner-title-block" id="quarto-document-content">
+<main class="content quarto-banner-title-block page-columns page-full" id="quarto-document-content">
 
 
 
@@ -214,14 +265,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-figure quarto-figure-center">
 <figure class="figure">
 <p><img src="images/dataset-cover.jpg" class="img-fluid figure-img"></p>
-<figcaption>The dataset was uploaded by Hanzla Nawaz on <a href="https://www.kaggle.com/datasets/hanzlanawaz/monkeypox-outbreak/code">Kaggle</a> in 2022. Image created by Hanzla Nawaz</figcaption>
+<figcaption>The dataset was uploaded by Hanzla Nawaz on <a href="https://www.kaggle.com/datasets/hanzlanawaz/monkeypox-outbreak/code">Kaggle</a><span class="citation" data-cites="cdc_monkeypox"><sup><a href="#ref-cdc_monkeypox" role="doc-biblioref">1</a></sup></span> in 2022. Image created by Hanzla Nawaz</figcaption>
 </figure>
 </div>
 <section id="background" class="level3">
 <h3 class="anchored" data-anchor-id="background"><span style="color: #789a69">Background</span></h3>
 <div class="grid">
 <div class="g-col-8">
-<p>Monkeypox, a viral disease caused by an orthopoxvirus, triggered a global outbreak in May 2022, originating in the Democratic Republic of the Congo. A newly identified strain, Clade Ib, was primarily responsible for this outbreak, spreading to regions and countries previously unaffected by the disease (https://www.who.int/emergencies/situations/mpox-outbreak). Understanding this transmission pattern and identifying potential risk factors is critical to assessing future transmission risks. This leads to my research question for this analysis:</p>
+<p>Monkeypox, a viral disease caused by an orthopoxvirus, triggered a global outbreak in May 2022, originating in the Democratic Republic of the Congo. A newly identified strain, Clade Ib, was primarily responsible for this outbreak, spreading to regions and countries previously unaffected by the disease<span class="citation" data-cites="who_mpox"><sup><a href="#ref-who_mpox" role="doc-biblioref">2</a></sup></span>. Understanding this transmission pattern and identifying potential risk factors is critical to assessing future transmission risks. This leads to my research question for this analysis:</p>
 </div>
 <div class="g-col-4">
 <p><img src="images/WHO_logo.jpg" class="img-fluid" style="width:80.0%"></p>
@@ -238,7 +289,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="cleaning-process" class="level3">
 <h3 class="anchored" data-anchor-id="cleaning-process"><span style="color: #789a69">Cleaning Process</span></h3>
-<p>In this section, I have conducted some data cleaning and also showed <strong>5</strong> different functions from <code>dplyr</code> or <code>tidyr</code> package. 1. <code>dplyr::mutate</code>; 2. <code>dplyr::case_when</code>; 3. <code>dplyr::filter</code>; 4. <code>dplyr::count</code>; 5. <code>tidyr::separate_rows</code></p>
+<p>In this section, I have conducted some data cleaning and also showed <strong>5</strong> different functions from <code>dplyr</code> or <code>tidyr</code> package. 1. <span id="mutate"><code>dplyr::mutate</code></span>; 2. <span id="case_when"> <code>dplyr::case_when</code></span>; 3. <span id="filter"><code>dplyr::filter</code></span>; 4. <span id="count"><code>dplyr::count</code></span>; 5. <span id="separate_rows"><code>tidyr::separate_rows</code></span></p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>In this analysis page, all the code chuncks have been toggled. Please click the <code>&gt; Code</code> to see more information about the code.</p>
+</div>
+</div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -299,109 +363,222 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </details>
 </div>
 </section>
-<section id="analysis-process" class="level3">
+<section id="analysis-process" class="level3 page-columns page-full">
 <h3 class="anchored" data-anchor-id="analysis-process"><span style="color: #789a69">Analysis Process</span></h3>
 <p>In this section, a few analysis have been produced with visualizations</p>
+<section id="geographical-distribution-of-cases-map-plot" class="level4">
+<h4 class="anchored" data-anchor-id="geographical-distribution-of-cases-map-plot"><span id="sf" style="color: #699a73">Geographical Distribution of Cases (Map Plot)</span></h4>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Drawing Epidemic Curve</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>dataset_clean <span class="ot">&lt;-</span> dataset_clean <span class="sc">|&gt;</span> </span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Date_confirmation)) <span class="sc">|&gt;</span> </span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Date_confirmation =</span> <span class="fu">as.Date</span>(Date_confirmation, <span class="at">format =</span> <span class="st">"%Y/%m/%d"</span>))</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>epidemic_data <span class="ot">&lt;-</span> dataset_clean <span class="sc">|&gt;</span> </span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(Date_confirmation, <span class="at">name =</span> <span class="st">"case_count"</span>)</span>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Map the cases </span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Load world map data with country shapes</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>world <span class="ot">&lt;-</span> <span class="fu">ne_countries</span>(<span class="at">scale =</span> <span class="st">"medium"</span>, <span class="at">returnclass =</span> <span class="st">"sf"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Count cases by Country_ISO3 from your dataset</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>country_cases <span class="ot">&lt;-</span> dataset_clean <span class="sc">|&gt;</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Status <span class="sc">==</span> <span class="st">"confirmed"</span> <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(Country_ISO3)) <span class="sc">|&gt;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(Country_ISO3, <span class="at">name =</span> <span class="st">"case_count"</span>)  <span class="co"># Count cases by Country_ISO3</span></span>
 <span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">Sys.setlocale</span>(<span class="st">"LC_TIME"</span>, <span class="st">"C"</span>)) <span class="co"># Set date in English</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(epidemic_data, <span class="fu">aes</span>(<span class="at">x =</span> Date_confirmation, <span class="at">y =</span> case_count)) <span class="sc">+</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Epidemic Curve of Monkeypox Cases"</span>,</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Number of confirmed cases by date of confirmation"</span>,</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Date of Confirmation"</span>,</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Cases"</span>,</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Data source: Monkeypox dataset"</span></span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Join the case data with world map data by Country_ISO3</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>world_cases <span class="ot">&lt;-</span> world <span class="sc">|&gt;</span> </span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">left_join</span>(country_cases, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"iso_a3"</span> <span class="ot">=</span> <span class="st">"Country_ISO3"</span>))</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot the map, highlighting countries with cases</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> world_cases) <span class="sc">+</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_sf</span>(<span class="fu">aes</span>(<span class="at">fill =</span> case_count), <span class="at">color =</span> <span class="st">"gray50"</span>) <span class="sc">+</span>  <span class="co"># Color countries by case count</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_gradient</span>(<span class="at">low =</span> <span class="st">"lightyellow"</span>, <span class="at">high =</span> <span class="st">"darkred"</span>, <span class="at">na.value =</span> <span class="st">"gray90"</span>, </span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                      <span class="at">name =</span> <span class="st">"Case Count"</span>) <span class="sc">+</span>  <span class="co"># Color gradient for case counts</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Monkeypox Cases by Country"</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Countries shaded by the number of confirmed cases"</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Data source: Monkeypox dataset"</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">legend.position =</span> <span class="st">"bottom"</span>,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>()</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="example_analysis_files/figure-html/analysis process-1.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="example_analysis_files/figure-html/analysis process 1 Map the Cases-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
+</div>
+<div class="figure-caption">
+Figure 1: Map the distribution of the cases worldwide
+</div>
+<p><br>
+The map visualized the distribution of monkeypox cases by country of residence with shading to indicate the case counts. The darker shading represents countries with higher number of cases, such as Canada, U.K., and Spain, indicating the most affected regions during the outbreak.<br>
+During the 2022 outbreak, the international spread not restricted to endemic regions but spread across North America and Europe, the regions with historically low incidence rates.</p>
+</section>
+<section id="epidemic-curve-line-plot" class="level4">
+<h4 class="anchored" data-anchor-id="epidemic-curve-line-plot"><span id="line" style="color: #699a73">Epidemic Curve (Line Plot)</span></h4>
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Relationship between hospitalization and age groups</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="do">## i. Calculate total case counts by Age Group</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>age_group_totals <span class="ot">&lt;-</span> dataset_clean <span class="sc">|&gt;</span> </span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(Age_Group, <span class="at">name =</span> <span class="st">"total_cases"</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="do">## ii. Calculate hospitalization counts by Age Group</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>hospitalization_data <span class="ot">&lt;-</span> dataset_clean <span class="sc">|&gt;</span> </span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Age_Group <span class="sc">!=</span> <span class="st">"NA"</span> <span class="sc">&amp;</span> <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Y"</span>, <span class="st">"N"</span>)) <span class="sc">|&gt;</span> </span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(Age_Group, <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span>, <span class="at">name =</span> <span class="st">"case_count"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span> <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">case_when</span>(</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="st">"Hospitalized"</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"N"</span> <span class="sc">~</span> <span class="st">"Not Hospitalized"</span>,</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Unknown"</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  ))</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="do">## iii. Merge total cases and hospitalized cases, then calculate hospitalization rate</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>hospitalization_rates <span class="ot">&lt;-</span> hospitalization_data <span class="sc">|&gt;</span> </span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(Age_Group) <span class="sc">|&gt;</span> </span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">total_cases =</span> <span class="fu">sum</span>(case_count),</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>                <span class="at">attack_rate =</span> (case_count <span class="sc">/</span> total_cases) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">ungroup</span>()</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="do">## iiii. Plot hospitalization and non-hospitalization rates by age group</span></span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(hospitalization_rates, <span class="fu">aes</span>(<span class="at">x =</span> Age_Group, <span class="at">y =</span> attack_rate, <span class="at">fill =</span> <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span>)) <span class="sc">+</span></span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span>) <span class="sc">+</span></span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Hospitalization vs. Non-Hospitalization Attack Rates by Age Group"</span>,</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Comparison of hospitalization risks across age groups"</span>,</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Age Group"</span>,</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Attack Rate (%)"</span>,</span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Hospitalization Status"</span>,</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Data source: Monkeypox dataset"</span></span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. Drawing Epidemic Curve</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>dataset_clean <span class="ot">&lt;-</span> dataset_clean <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Date_confirmation)) <span class="sc">|&gt;</span> </span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">Date_confirmation =</span> <span class="fu">as.Date</span>(Date_confirmation, <span class="at">format =</span> <span class="st">"%Y/%m/%d"</span>))</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>epidemic_data <span class="ot">&lt;-</span> dataset_clean <span class="sc">|&gt;</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(Date_confirmation, <span class="at">name =</span> <span class="st">"case_count"</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">invisible</span>(<span class="fu">Sys.setlocale</span>(<span class="st">"LC_TIME"</span>, <span class="st">"C"</span>)) <span class="co"># Set date in English</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(epidemic_data, <span class="fu">aes</span>(<span class="at">x =</span> Date_confirmation, <span class="at">y =</span> case_count)) <span class="sc">+</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Epidemic Curve of Monkeypox Cases"</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Number of confirmed cases by date of confirmation"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Date of Confirmation"</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Number of Cases"</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Data source: Monkeypox dataset"</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="example_analysis_files/figure-html/analysis process-2.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="example_analysis_files/figure-html/analysis process 2 Drawing Epidemic Curve-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
+</div>
+<div class="figure-caption">
+Figure 2: Epidemic Curve for all the monkeypox confirmed cases by date of confirmation
+</div>
+<br>
+The epidemic curve shows the temporal trend of confirmed monkeypox cases over time, with the x-axis representing the date of confirmation and the y-axis the number of cases.<br>
+There is a clear upward trend in the number of cases around mid-May, with multiple peaks toward the end of the month. A few things is good to notice:<br>
+
+<div class="indented-paragraph">
+<p><strong>1.</strong> the outbreak began with an initial case confirmed on May 6, followed by a significant upward trend starting around May 16. Given monkeypox’s estimated incubation period of approximately 8.2 days<span class="citation" data-cites="ponce2024"><sup><a href="#ref-ponce2024" role="doc-biblioref">3</a></sup></span>, the estimated incubation period of 10 days from the epidemic curve align with the scientific evidence of monkeypox;<br>
+<strong>2.</strong> Several distinct peaks are visible toward the end of May, followed by a sharp decline in early June. This pattern indicates possible phases of intensified transmission or surges in case identifying, which could be associated with international travel and mobility during the outbreak period. The rapid decrease in cases in early June may suggest that public health interventions, likely implemented at the end of May, were effective in curtailing the outbreak. The overall left-skewed shape of the epidemic curve supports this, indicating a swift and effective response that helped to control the spread and bring the outbreak to an end by early June.</p>
+</div>
+</section>
+<section id="hospitalization-vs.-non-hospitalization-by-age-group-bar-plot-with-facets" class="level4 page-columns page-full">
+<h4 class="anchored" data-anchor-id="hospitalization-vs.-non-hospitalization-by-age-group-bar-plot-with-facets"><span id="col" style="color: #699a73">Hospitalization vs.&nbsp;Non-Hospitalization by Age Group (Bar Plot with Facets)</span></h4>
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">## v. Attack Rates and Chi-Square Test on Hospitalization</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>contingency_table <span class="ot">&lt;-</span> hospitalization_data <span class="sc">|&gt;</span> </span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span>, <span class="at">values_from =</span> case_count, <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Age_Group, Hospitalized, <span class="st">`</span><span class="at">Not Hospitalized</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="at">var =</span> <span class="st">"Age_Group"</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="do">## vi. Perform chi-square test on hospitalization vs age group</span></span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>chi_square_test <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(contingency_table)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(chi_square_test)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Relationship between hospitalization and age groups</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="do">## i. Calculate total case counts by Age Group</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>age_group_totals <span class="ot">&lt;-</span> dataset_clean <span class="sc">|&gt;</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(Age_Group, <span class="at">name =</span> <span class="st">"total_cases"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="do">## ii. Calculate hospitalization counts by Age Group</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>hospitalization_data <span class="ot">&lt;-</span> dataset_clean <span class="sc">|&gt;</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(Age_Group <span class="sc">!=</span> <span class="st">"NA"</span> <span class="sc">&amp;</span> <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span> <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Y"</span>, <span class="st">"N"</span>)) <span class="sc">|&gt;</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">count</span>(Age_Group, <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span>, <span class="at">name =</span> <span class="st">"case_count"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span> <span class="ot">=</span> dplyr<span class="sc">::</span><span class="fu">case_when</span>(</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"Y"</span> <span class="sc">~</span> <span class="st">"Hospitalized"</span>,</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span> <span class="sc">==</span> <span class="st">"N"</span> <span class="sc">~</span> <span class="st">"Not Hospitalized"</span>,</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"Unknown"</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a><span class="do">## iii. Merge total cases and hospitalized cases, then calculate hospitalization rate</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>hospitalization_rates <span class="ot">&lt;-</span> hospitalization_data <span class="sc">|&gt;</span> </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">group_by</span>(Age_Group) <span class="sc">|&gt;</span> </span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">total_cases =</span> <span class="fu">sum</span>(case_count),</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>                <span class="at">attack_rate =</span> (case_count <span class="sc">/</span> total_cases) <span class="sc">*</span> <span class="dv">100</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">ungroup</span>()</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="do">## iiii. Plot hospitalization and non-hospitalization rates by age group</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(hospitalization_rates, <span class="fu">aes</span>(<span class="at">x =</span> Age_Group, <span class="at">y =</span> attack_rate, <span class="at">fill =</span> <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span>)) <span class="sc">+</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">position =</span> <span class="fu">position_dodge</span>(<span class="at">width =</span> <span class="fl">0.5</span>), <span class="at">width =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span> <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span>) <span class="sc">+</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Hospitalization vs. Non-Hospitalization Attack Rates by Age Group"</span>,</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="st">"Comparison of hospitalization risks across age groups"</span>,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"Age Group"</span>,</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Attack Rate (%)"</span>,</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>    <span class="at">fill =</span> <span class="st">"Hospitalization Status"</span>,</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"Data source: Monkeypox dataset"</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
-<div class="cell-output cell-output-stdout">
-<pre><code>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="example_analysis_files/figure-html/analysis process 3 hospitalization and age groups-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<div class="figure-caption">
+Figure 3: Bar plot of hospitalization rate (attack rate) in confirmed cases for comparison among different age groups.
+</div>
+<p><br>
+This plot compares hospitalization rates among different age groups for “Hospitalized” and “Not Hospitalized” cases. Higher hospitalization rates are observed among certain age groups, particularly in the “40-49” and “50-59” age groups, suggesting these demographics may face higher risks of severe outcomes. Conversely, younger age groups generally show lower hospitalization rates.</p>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="do">## v. Attack Rates and Chi-Square Test on Hospitalization</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>contingency_table <span class="ot">&lt;-</span> hospitalization_data <span class="sc">|&gt;</span> </span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  tidyr<span class="sc">::</span><span class="fu">pivot_wider</span>(<span class="at">names_from =</span> <span class="st">`</span><span class="at">Hospitalised..Y.N.NA.</span><span class="st">`</span>, <span class="at">values_from =</span> case_count, <span class="at">values_fill =</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Age_Group, Hospitalized, <span class="st">`</span><span class="at">Not Hospitalized</span><span class="st">`</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">column_to_rownames</span>(<span class="at">var =</span> <span class="st">"Age_Group"</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.matrix</span>()</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="do">## vi. Perform chi-square test and capture the result</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>chi_square_test <span class="ot">&lt;-</span> <span class="fu">chisq.test</span>(contingency_table)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>chi_square_result <span class="ot">&lt;-</span> <span class="fu">capture.output</span>(<span class="fu">print</span>(chi_square_test))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+
+<div class="no-row-height column-margin column-container"><div class="">
+<p>The <span class="math inline">\(\chi^2\)</span> test can consider using the following equation to calculate:<br>
+(In this equation, <span class="math inline">\(\chi^2\)</span> = chi square, <span class="math inline">\(O_i\)</span> = observed value, <span class="math inline">\(E_i\)</span> = expected value)<br>
+<span class="math display">\[\chi^2 = \sum {(O_i - E_i)^2 \over E_i}\]</span></p>
+</div></div><div>
+<button onclick="toggleResults()">Show/Hide Results</button>
+<pre id="chi-square-results" style="display: none;">  
     Pearson's Chi-squared test
 
 data:  contingency_table
-X-squared = 18.876, df = 5, p-value = 0.002027</code></pre>
+X-squared = 18.876, df = 5, p-value = 0.002027
+
+  </pre>
 </div>
+<script>
+  function toggleResults() {
+    var results = document.getElementById("chi-square-results");
+    if (results.style.display === "none") {
+      results.style.display = "block";
+    } else {
+      results.style.display = "none";
+    }
+  }
+</script>
+<p><br>
+</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Warning
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Only depends on the p-value or single test (chi-square test in this analysis) is actaully not sufficient to prove your general idea.</p>
+</div>
+</div>
+<p>By clicking on <code>Show/Hide Results</code>, the chi-square test results are revealed, showing a p-value of 0.002027, which is below the significance threshold of 0.05. This indicates a statistically significant difference in hospitalization risk across all age groups.</p>
+</section>
+<section id="heatmap-of-travel-history-and-date-of-confirmation" class="level4">
+<h4 class="anchored" data-anchor-id="heatmap-of-travel-history-and-date-of-confirmation"><span id="tile" style="color: #699a73">Heatmap of Travel History and Date of Confirmation</span></h4>
+<div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. Heatmap of Confirmed Cases by Travel History Country and Date of Confirmation</span></span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Heatmap of Confirmed Cases by Travel History Country and Date of Confirmation</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter out unknown travel history countries</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>heatmap_data <span class="ot">&lt;-</span> monkeypox_separated <span class="sc">|&gt;</span> </span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Travel_history_country) <span class="sc">&amp;</span> Travel_history_country <span class="sc">!=</span> <span class="st">"Unknown"</span>) <span class="sc">|&gt;</span> </span>
@@ -429,9 +606,57 @@ X-squared = 18.876, df = 5, p-value = 0.002027</code></pre>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="example_analysis_files/figure-html/analysis process-3.png" class="img-fluid figure-img" width="672"></p>
+<p><img src="example_analysis_files/figure-html/analysis process 4 Travel History Country-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
+</div>
+</div>
+<div class="figure-caption">
+Figure 4: Heat map to locate confirmed cases’s destination countries by using their travel history
+</div>
+<p><br>
+The heatmap provides insights into the travel history associated with confirmed monkeypox cases by mapping the date of confirmation against the travel history locations.<br>
+Notably, countries like Spain, Portugal, and England appear frequently, indicating these regions might have been initial points of infection or key nodes in the network of international transmission.</p>
+</section>
+</section>
+<section id="analysis-summary" class="level3">
+<h3 class="anchored" data-anchor-id="analysis-summary"><span style="color: #789a69">Analysis Summary</span></h3>
+<p>The analysis of the 2022 monkeypox outbreak dataset reveals important insights into the transmission patterns, demographic risk factors, and geographical spread of cases. The epidemic curve indicates a sharp rise in cases around mid-May, with multiple peaks and a rapid decline in early June, suggesting that interventions implemented at the end of May were effective in controlling the outbreak. The geographical distribution of cases highlights significant transmission in non-endemic regions, particularly in North America and Europe, underscoring the role of international travel in disease spread. Hospitalization rates varied significantly across age groups, with older populations facing a higher risk of severe outcomes, as confirmed by a chi-square test (p-value = 0.002027). This finding emphasizes the need for targeted interventions to protect vulnerable age groups. Overall, the analysis provides critical insights for public health planning, reinforcing the importance of timely interventions, monitoring travel-associated transmission, and allocating healthcare resources for at-risk populations.</p>
+</section>
+<section id="function-used-in-this-analysis" class="level3">
+<h3 class="anchored" data-anchor-id="function-used-in-this-analysis"><span style="color: #789a69">Function Used in This Analysis</span></h3>
+As I mentioned above, here are a few functions related to <code>dplyr</code> or <code>tidyr</code>:<br>
+
+<div class="indented-paragraph">
+<ol type="1">
+<li><a href="#mutate"><code>dplyr::mutate</code></a></li>
+<li><a href="#case_when"><code>dplyr::case_when</code></a></li>
+<li><a href="#filter"><code>dplyr::filter</code></a></li>
+<li><a href="#count"><code>dplyr::count</code></a></li>
+<li><a href="#separate_rows"><code>tidyr::separate_rows</code></a></li>
+</ol>
+</div>
+A few functions for <code>ggplot2</code>:
+<div class="indented-paragraph">
+<ol type="1">
+<li><a href="#sf"><code>ggplot2::geom_sf</code></a></li>
+<li><a href="#line"><code>ggplot2::geom_line</code></a></li>
+<li><a href="#col"><code>ggplot2::geom_col</code></a></li>
+<li><a href="#tile"><code>ggplot2::geom_tile</code></a></li>
+</ol>
+</div>
+</section>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references"><span style="color: #789a69">References</span></h3>
+<div id="refs" class="references csl-bib-body" role="list">
+<div id="ref-cdc_monkeypox" class="csl-entry" role="listitem">
+<div class="csl-left-margin">1. </div><div class="csl-right-inline">Nawaz H. <span class="nocase">Monkeypox in the United States</span>. Published online 2022. <a href="https://www.kaggle.com/datasets/hanzlanawaz/monkeypox-outbreak/data">https://www.kaggle.com/datasets/hanzlanawaz/monkeypox-outbreak/data</a></div>
+</div>
+<div id="ref-who_mpox" class="csl-entry" role="listitem">
+<div class="csl-left-margin">2. </div><div class="csl-right-inline">World Health Organization. <span>Mpox Outbreak</span>. Published online 2024. <a href="https://www.who.int/emergencies/situations/mpox-outbreak">https://www.who.int/emergencies/situations/mpox-outbreak</a></div>
+</div>
+<div id="ref-ponce2024" class="csl-entry" role="listitem">
+<div class="csl-left-margin">3. </div><div class="csl-right-inline">Ponce L, Linton NM, Toh WH, et al. <span class="nocase">Incubation Period and Serial Interval of Mpox in 2022 Global Outbreak Compared with Historical Estimates</span>. <em>Emerging Infectious Diseases</em>. 2024;30(6):1173-1181. doi:<a href="https://doi.org/10.3201/eid3006.231095">10.3201/eid3006.231095</a></div>
 </div>
 </div>
 

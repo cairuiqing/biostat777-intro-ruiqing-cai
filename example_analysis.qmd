@@ -5,12 +5,18 @@ author:
   - name: Ruiqing Cai
 date: 2024-11-05
 categories: [JHBSPH]
+bibliography: references.bib
 description: |
   An example analysis with 2022 Monkeypox outbreak dataset. \
-  **Intended Audience**: *Public health professionals, epidemiologists, and policymakers*
+  **Intended Audience**: *Infectious Diseases related Public health professionals, epidemiologists, and policymakers. And Of course anyone interest in my website and reading my analysis, like you*
+
+format:
+  html:
+    css: styles.css
+csl: american-medical-association.csl
 ---
 
-![The dataset was uploaded by Hanzla Nawaz on [Kaggle](https://www.kaggle.com/datasets/hanzlanawaz/monkeypox-outbreak/code) in 2022. Image created by Hanzla Nawaz](images/dataset-cover.jpg)
+![The dataset was uploaded by Hanzla Nawaz on [Kaggle](https://www.kaggle.com/datasets/hanzlanawaz/monkeypox-outbreak/code) @cdc_monkeypox in 2022. Image created by Hanzla Nawaz](images/dataset-cover.jpg)
 
 ### [Background]{style="color: #789a69"}
 
@@ -18,7 +24,7 @@ description: |
 
 ::::: grid
 ::: g-col-8
-Monkeypox, a viral disease caused by an orthopoxvirus, triggered a global outbreak in May 2022, originating in the Democratic Republic of the Congo. A newly identified strain, Clade Ib, was primarily responsible for this outbreak, spreading to regions and countries previously unaffected by the disease (https://www.who.int/emergencies/situations/mpox-outbreak). Understanding this transmission pattern and identifying potential risk factors is critical to assessing future transmission risks. This leads to my research question for this analysis:
+Monkeypox, a viral disease caused by an orthopoxvirus, triggered a global outbreak in May 2022, originating in the Democratic Republic of the Congo. A newly identified strain, Clade Ib, was primarily responsible for this outbreak, spreading to regions and countries previously unaffected by the disease @who_mpox. Understanding this transmission pattern and identifying potential risk factors is critical to assessing future transmission risks. This leads to my research question for this analysis:
 :::
 
 ::: g-col-4
@@ -37,12 +43,21 @@ The data contains detailed information about the Monkeypox cases during the 2022
 ```{r Loading chunck, include=FALSE}
 if (!require(tidyverse)) {install.packages("tidyverse"); library(tidyverse)}
 if (!require(knitr)) {install.packages("knitr"); library(knitr)}
+if (!require(rnaturalearth)) {install.packages("rnaturalearth"); library(rnaturalearth)}
+if (!require(sf)) {install.packages("sf"); library(sf)}
+
 dataset <- read.csv("data/Monkeypox.csv")
 ```
 
 ### [Cleaning Process]{style="color: #789a69"}
 In this section, I have conducted some data cleaning and also showed **5** different functions from `dplyr` or `tidyr` package.
-1. `dplyr::mutate`; 2. `dplyr::case_when`; 3. `dplyr::filter`; 4. `dplyr::count`; 5. `tidyr::separate_rows`
+1. <span id="mutate">`dplyr::mutate`</span>; 2. <span id="case_when"> `dplyr::case_when`</span>; 3. <span id="filter">`dplyr::filter`</span>; 4. <span id="count">`dplyr::count`</span>; 5. <span id="separate_rows">`tidyr::separate_rows`</span>
+
+::: {.callout-note}
+## Note
+
+In this analysis page, all the code chuncks have been toggled. Please click the `> Code` to see more information about the code.
+:::
 
 ```{r data cleaning, warning=FALSE}
 # 1. Clean and standardize the Age column
@@ -104,8 +119,46 @@ monkeypox_separated <- dataset_filtered |>
 ### [Analysis Process]{style="color: #789a69"}
 In this section, a few analysis have been produced with visualizations
 
-```{r analysis process, warning=FALSE, error=FALSE}
-# 1. Drawing Epidemic Curve
+#### [Geographical Distribution of Cases (Map Plot)]{#sf style="color: #699a73"}
+```{r analysis process 1 Map the Cases, warning=FALSE, error=FALSE}
+# 1. Map the cases 
+# Load world map data with country shapes
+world <- ne_countries(scale = "medium", returnclass = "sf")
+
+# Count cases by Country_ISO3 from your dataset
+country_cases <- dataset_clean |> 
+  dplyr::filter(Status == "confirmed" & !is.na(Country_ISO3)) |>
+  dplyr::count(Country_ISO3, name = "case_count")  # Count cases by Country_ISO3
+
+# Join the case data with world map data by Country_ISO3
+world_cases <- world |> 
+  dplyr::left_join(country_cases, by = c("iso_a3" = "Country_ISO3"))
+
+# Plot the map, highlighting countries with cases
+ggplot(data = world_cases) +
+  geom_sf(aes(fill = case_count), color = "gray50") +  # Color countries by case count
+  scale_fill_gradient(low = "lightyellow", high = "darkred", na.value = "gray90", 
+                      name = "Case Count") +  # Color gradient for case counts
+  labs(
+    title = "Monkeypox Cases by Country",
+    subtitle = "Countries shaded by the number of confirmed cases",
+    caption = "Data source: Monkeypox dataset"
+  ) +
+  theme_minimal() +
+  theme(
+    legend.position = "bottom",
+    panel.grid = element_blank()
+  )
+```
+<div class="figure-caption"> Figure 1: Map the distribution of the cases worldwide </div>
+\
+The map visualized the distribution of monkeypox cases by country of residence with shading to indicate the case counts. The darker shading represents countries with higher number of cases, such as Canada, U.K., and Spain, indicating the most affected regions during the outbreak.\
+During the 2022 outbreak, the international spread not restricted to endemic regions but spread across North America and Europe, the regions with historically low incidence rates.
+
+
+#### [Epidemic Curve (Line Plot)]{#line style="color: #699a73"}
+```{r analysis process 2 Drawing Epidemic Curve, warning=FALSE, error=FALSE}
+# 2. Drawing Epidemic Curve
 dataset_clean <- dataset_clean |> 
   dplyr::filter(!is.na(Date_confirmation)) |> 
   dplyr::mutate(Date_confirmation = as.Date(Date_confirmation, format = "%Y/%m/%d"))
@@ -126,8 +179,20 @@ ggplot(epidemic_data, aes(x = Date_confirmation, y = case_count)) +
     caption = "Data source: Monkeypox dataset"
   ) +
   theme_classic()
+```
+<div class="figure-caption"> Figure 2: Epidemic Curve for all the monkeypox confirmed cases by date of confirmation </div>
+\
+The epidemic curve shows the temporal trend of confirmed monkeypox cases over time, with the x-axis representing the date of confirmation and the y-axis the number of cases.\
+There is a clear upward trend in the number of cases around mid-May, with multiple peaks toward the end of the month. A few things is good to notice:\
+<div class="indented-paragraph">
+**1.** the outbreak began with an initial case confirmed on May 6, followed by a significant upward trend starting around May 16. Given monkeypox’s estimated incubation period of approximately 8.2 days @ponce2024, the estimated incubation period of 10 days from the epidemic curve align with the scientific evidence of monkeypox;\
+**2.** Several distinct peaks are visible toward the end of May, followed by a sharp decline in early June. This pattern indicates possible phases of intensified transmission or surges in case identifying, which could be associated with international travel and mobility during the outbreak period. The rapid decrease in cases in early June may suggest that public health interventions, likely implemented at the end of May, were effective in curtailing the outbreak. The overall left-skewed shape of the epidemic curve supports this, indicating a swift and effective response that helped to control the spread and bring the outbreak to an end by early June.
+</div>
 
-# 2. Relationship between hospitalization and age groups
+
+#### [Hospitalization vs. Non-Hospitalization by Age Group (Bar Plot with Facets)]{#col style="color: #699a73"}
+```{r analysis process 3 hospitalization and age groups, warning=FALSE, error=FALSE, }
+# 3. Relationship between hospitalization and age groups
 ## i. Calculate total case counts by Age Group
 age_group_totals <- dataset_clean |> 
   dplyr::count(Age_Group, name = "total_cases")
@@ -162,6 +227,14 @@ ggplot(hospitalization_rates, aes(x = Age_Group, y = attack_rate, fill = `Hospit
     caption = "Data source: Monkeypox dataset"
   ) +
   theme_classic()
+```
+<div class="figure-caption"> Figure 3: Bar plot of hospitalization rate (attack rate) in confirmed cases for comparison among different age groups. </div>
+\
+This plot compares hospitalization rates among different age groups for "Hospitalized" and "Not Hospitalized" cases. Higher hospitalization rates are observed among certain age groups, particularly in the "40-49" and "50-59" age groups, suggesting these demographics may face higher risks of severe outcomes. Conversely, younger age groups generally show lower hospitalization rates.
+
+
+```{r 3 hospitalization and age groups chi square, warning=FALSE}
+#| echo: true
 
 ## v. Attack Rates and Chi-Square Test on Hospitalization
 contingency_table <- hospitalization_data |> 
@@ -170,11 +243,49 @@ contingency_table <- hospitalization_data |>
   column_to_rownames(var = "Age_Group") |> 
   as.matrix()
 
-## vi. Perform chi-square test on hospitalization vs age group
+## vi. Perform chi-square test and capture the result
 chi_square_test <- chisq.test(contingency_table)
-print(chi_square_test)
+chi_square_result <- capture.output(print(chi_square_test))
+```
+::: {.column-margin}
+The $\chi^2$ test can consider using the following equation to calculate:\
+(In this equation, $\chi^2$ = chi square, $O_i$ = observed value, $E_i$ = expected value)\
+$$\chi^2 = \sum {(O_i - E_i)^2 \over E_i}$$
+:::
 
-# 3. Heatmap of Confirmed Cases by Travel History Country and Date of Confirmation
+<div>
+  <button onclick="toggleResults()">Show/Hide Results</button>
+  <pre id="chi-square-results" style="display: none;">
+  `r paste(chi_square_result, collapse = "\n")`
+  </pre>
+</div>
+
+<script>
+  function toggleResults() {
+    var results = document.getElementById("chi-square-results");
+    if (results.style.display === "none") {
+      results.style.display = "block";
+    } else {
+      results.style.display = "none";
+    }
+  }
+</script>
+\
+
+::: {.callout-warning}
+## Warning
+
+Only depends on the p-value or single test (chi-square test in this analysis) is actaully not sufficient to prove your general idea. 
+:::
+
+
+
+By clicking on `Show/Hide Results`, the chi-square test results are revealed, showing a p-value of 0.002027, which is below the significance threshold of 0.05. This indicates a statistically significant difference in hospitalization risk across all age groups. 
+
+
+#### [Heatmap of Travel History and Date of Confirmation]{#tile style="color: #699a73"}
+```{r analysis process 4 Travel History Country, warning=FALSE, error=FALSE}
+# 4. Heatmap of Confirmed Cases by Travel History Country and Date of Confirmation
 # Filter out unknown travel history countries
 heatmap_data <- monkeypox_separated |> 
   dplyr::filter(!is.na(Travel_history_country) & Travel_history_country != "Unknown") |> 
@@ -199,5 +310,35 @@ ggplot(heatmap_data, aes(x = Date_confirmation, y = Travel_history_country, fill
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+<div class="figure-caption"> Figure 4: Heat map to locate confirmed cases's destination countries by using their travel history </div>
+\
+The heatmap provides insights into the travel history associated with confirmed monkeypox cases by mapping the date of confirmation against the travel history locations.\
+Notably, countries like Spain, Portugal, and England appear frequently, indicating these regions might have been initial points of infection or key nodes in the network of international transmission.
 
+
+### [Analysis Summary]{style="color: #789a69"}
+The analysis of the 2022 monkeypox outbreak dataset reveals important insights into the transmission patterns, demographic risk factors, and geographical spread of cases. The epidemic curve indicates a sharp rise in cases around mid-May, with multiple peaks and a rapid decline in early June, suggesting that interventions implemented at the end of May were effective in controlling the outbreak. The geographical distribution of cases highlights significant transmission in non-endemic regions, particularly in North America and Europe, underscoring the role of international travel in disease spread. Hospitalization rates varied significantly across age groups, with older populations facing a higher risk of severe outcomes, as confirmed by a chi-square test (p-value = 0.002027). This finding emphasizes the need for targeted interventions to protect vulnerable age groups. Overall, the analysis provides critical insights for public health planning, reinforcing the importance of timely interventions, monitoring travel-associated transmission, and allocating healthcare resources for at-risk populations.
+
+### [Function Used in This Analysis]{style="color: #789a69"}
+
+As I mentioned above, here are a few functions related to `dplyr` or `tidyr`:\
+<div class="indented-paragraph">
+1. [`dplyr::mutate`](#mutate)
+2. [`dplyr::case_when`](#case_when)
+3. [`dplyr::filter`](#filter)
+4. [`dplyr::count`](#count)
+5. [`tidyr::separate_rows`](#separate_rows)
+</div>
+
+A few functions for `ggplot2`:
+<div class="indented-paragraph">
+1. [`ggplot2::geom_sf`](#sf)
+2. [`ggplot2::geom_line`](#line)
+3. [`ggplot2::geom_col`](#col)
+4. [`ggplot2::geom_tile`](#tile)
+</div>
+
+### [References]{style="color: #789a69"}
+::: {#refs}
+:::
 
